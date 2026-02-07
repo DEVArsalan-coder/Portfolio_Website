@@ -317,14 +317,16 @@ header {
     align-items: center;
     position: relative;
     z-index: 2;
+    /* margin-top: 50px; Reverted as per user feedback */
 }
 
 .hero-image img {
     max-width: 100%;
     height: auto;
     width: 400px;
-    height: 400px;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
+    object-position: top center;
     display: block;
 
     /* Rounded Style */
@@ -755,8 +757,21 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 4rem;
-    color: white;
+    overflow: hidden;
+    /* Ensure image doesn't spill out */
+}
+
+.project-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    /* Show website header/navbar */
+    transition: var(--transition);
+}
+
+.project-card:hover .project-image img {
+    transform: scale(1.1);
 }
 
 .project-content {
@@ -1245,7 +1260,7 @@ footer {
         left: 0;
         width: 100%;
         height: 100vh;
-        background-color: white;
+        background-color: rgba(18, 18, 18, 0.98);
         flex-direction: column;
         padding: 80px 20px 20px;
         text-align: center;
