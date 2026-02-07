@@ -92,22 +92,35 @@ const animateCounter = () => {
 };
 
 if (messageForm) {
-    messageForm.addEventListener('submit', (e) => {
+    messageForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        // Get form data
         const formData = new FormData(messageForm);
-        const name = formData.get('name');
-        const email = formData.get('email');
-        const subject = formData.get('subject');
-        const message = formData.get('message');
+        const status = document.getElementById("messageForm-status");
         
-        // In a real application, you would send this data to a server
-        // For now, we'll just show a success message
-        showFormMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
-        
-        // Reset form
-        messageForm.reset();
+        try {
+            const response = await fetch(messageForm.action, {
+                method: messageForm.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showFormMessage('Message sent successfully! I\'ll get back to you soon.', 'success');
+                messageForm.reset();
+            } else {
+                const data = await response.json();
+                if (Object.hasOwn(data, 'errors')) {
+                     showFormMessage(data["errors"].map(error => error["message"]).join(", "), 'error');
+                } else {
+                    showFormMessage('Oops! There was a problem submitting your form', 'error');
+                }
+            }
+        } catch (error) {
+            showFormMessage('Oops! There was a problem submitting your form', 'error');
+        }
     });
 }
 
